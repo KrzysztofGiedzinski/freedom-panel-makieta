@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#360D2B">
+<title>Freedom Nieruchomości — makieta panelu zarządczego</title>
+<style>
+  :root{
+    --magenta:#e50071;--purpur:#360D2B;--szary2:#7f8c9a;--szary:#dee0e5;--bialy:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 700px at 50% -5%, #5a1f49 0%, #360D2B 55%, #240a1d 100%);
+    min-height:100vh;color:#fff;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:48px 20px;
+  }
+  .wrap{width:100%;max-width:760px;text-align:center}
+  .logo{font-size:38px;font-weight:700;letter-spacing:-.02em}
+  .logo span{color:#ff7ab8}
+  .sub{font-size:13px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:2px}
+  .lead{font-size:15px;color:rgba(255,255,255,.78);margin-top:18px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto}
+  .mk{display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:rgba(255,255,255,.12);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;padding:7px 15px;border-radius:999px}
+  .mk .dot{width:7px;height:7px;border-radius:50%;background:#ff7ab8}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:38px}
+  @media(max-width:680px){.cards{grid-template-columns:1fr}}
+  a.card{
+    display:block;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    border-radius:18px;padding:26px 20px;text-decoration:none;color:#fff;
+    transition:.18s;text-align:left;backdrop-filter:blur(4px);
+  }
+  a.card:hover{background:rgba(255,255,255,.12);border-color:var(--magenta);transform:translateY(-3px)}
+  a.card .ic{font-size:30px;display:block;margin-bottom:14px}
+  a.card .t{font-size:16px;font-weight:700}
+  a.card .d{font-size:12.5px;color:rgba(255,255,255,.65);margin-top:7px;line-height:1.5}
+  a.card .go{font-size:12.5px;font-weight:600;color:#ff7ab8;margin-top:16px;display:inline-block}
+
+  .foot{margin-top:40px;font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;max-width:520px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">freedom<span>.</span></div>
+    <div class="sub">Nieruchomości</div>
+    <p class="lead">Makieta panelu zarządczego — koncepcja widoku dla właściciela. Wybierz wersję, którą chcesz zobaczyć.</p>
+    <div class="mk"><span class="dot"></span>Makieta · dane przykładowe</div>
+
+    <div class="cards">
+      <a class="card" href="dashboard-freedom.html">
+        <span class="ic">🖥️</span>
+        <div class="t">Wersja desktop</div>
+        <div class="d">Trzy warianty w zakładkach: aktywność agentów, pipeline i prowizje, widok 3 biur.</div>
+        <span class="go">Otwórz →</span>
+      </a>
+      <a class="card" href="dashboard-freedom-app.html">
+        <span class="ic">📱</span>
+        <div class="t">Aplikacja mobilna</div>
+        <div class="d">Pełnoekranowa, klikalna: zakładki, filtr biur, rozwijane karty agentów.</div>
+        <span class="go">Otwórz →</span>
+      </a>
+      <a class="card" href="dashboard-freedom-mobile.html">
+        <span class="ic">👀</span>
+        <div class="t">Podgląd „glance"</div>
+        <div class="d">Telefon w ramce — najważniejsze liczby i alerty na jeden rzut oka.</div>
+        <span class="go">Otwórz →</span>
+      </a>
+    </div>
+
+    <p class="foot">Wszystkie dane są przykładowe i fikcyjne. Materiał roboczy do rozmowy o procesie — ostateczny zakres i wskaźniki ustalimy po mapowaniu procesu sprzedaży.</p>
+  </div>
+</body>
+</html>

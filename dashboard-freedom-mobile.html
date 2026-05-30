@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freedom Nieruchomości — podgląd mobilny (makieta)</title>
+<style>
+  :root{
+    --magenta:#e50071;
+    --magenta-soft:#fde6f1;
+    --purpur:#360D2B;
+    --szary:#dee0e5;
+    --szary2:#7f8c9a;
+    --bialy:#fff;
+    --tekst:#241019;
+    --zielony:#1f9d6b;
+    --czerwony:#d83a3a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 700px at 50% -10%, #5a1f49 0%, #360D2B 55%, #240a1d 100%);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:42px 16px 56px;-webkit-font-smoothing:antialiased;
+  }
+
+  .pagehead{text-align:center;color:#fff;margin-bottom:30px;max-width:420px}
+  .pagehead .logo{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em}
+  .pagehead .logo span{color:#ff7ab8}
+  .pagehead p{font-size:13px;opacity:.7;margin-top:6px;line-height:1.5}
+  .mk{display:inline-flex;align-items:center;gap:7px;margin-top:14px;background:rgba(255,255,255,.12);color:#fff;font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;padding:6px 13px;border-radius:999px}
+  .mk .dot{width:7px;height:7px;border-radius:50%;background:#ff7ab8}
+
+  /* ---------- Ramka telefonu ---------- */
+  .phone{
+    width:340px;background:#0c0c0e;border-radius:46px;padding:11px;
+    box-shadow:0 30px 70px rgba(0,0,0,.45), inset 0 0 0 2px #2a2a30;
+    position:relative;
+  }
+  .screen{
+    background:#f6f7f9;border-radius:36px;overflow:hidden;position:relative;
+    height:710px;display:flex;flex-direction:column;
+  }
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:130px;height:26px;background:#0c0c0e;border-radius:0 0 16px 16px;z-index:30}
+
+  /* ---------- Status bar ---------- */
+  .statusbar{display:flex;justify-content:space-between;align-items:center;padding:13px 22px 5px;font-size:12px;font-weight:600;color:var(--purpur);flex:0 0 auto}
+  .statusbar .icons{display:flex;gap:5px;font-size:11px;letter-spacing:1px}
+
+  /* ---------- App header ---------- */
+  .app-head{padding:8px 18px 14px;display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+  .app-head .logo{font-size:19px;font-weight:700;color:var(--magenta);letter-spacing:-.02em}
+  .app-head .logo small{font-size:9px;font-weight:600;letter-spacing:.18em;color:var(--szary2);text-transform:uppercase;display:block;margin-top:-2px}
+  .app-head .av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--purpur));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
+
+  /* ---------- Scroll body ---------- */
+  .body{flex:1;overflow-y:auto;padding:4px 18px 20px}
+  .body::-webkit-scrollbar{width:0}
+
+  .hello{margin-bottom:16px}
+  .hello h1{font-size:20px;font-weight:700;color:var(--purpur);letter-spacing:-.01em}
+  .hello p{font-size:12.5px;color:var(--szary2);margin-top:2px}
+
+  /* ---------- KPI 2x2 ---------- */
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}
+  .kpi{background:var(--bialy);border:1px solid var(--szary);border-radius:16px;padding:14px 15px;box-shadow:0 2px 8px rgba(54,13,43,.05)}
+  .kpi .label{font-size:11px;color:var(--szary2);font-weight:500;margin-bottom:7px;line-height:1.3}
+  .kpi .val{font-size:25px;font-weight:700;color:var(--purpur);letter-spacing:-.02em;line-height:1}
+  .kpi .val small{font-size:13px;font-weight:600;color:var(--szary2)}
+  .kpi .delta{font-size:11px;font-weight:600;margin-top:7px}
+  .delta.up{color:var(--zielony)} .delta.down{color:var(--czerwony)}
+
+  /* ---------- Alert ---------- */
+  .alert{background:var(--magenta-soft);border:1px solid #f6c4dd;border-left:4px solid var(--magenta);border-radius:14px;padding:13px 14px;margin-bottom:18px;display:flex;gap:11px;align-items:flex-start}
+  .alert .ico{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--magenta);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .alert .atxt{font-size:12.5px;line-height:1.35}
+  .alert .atxt b{color:var(--purpur)}
+  .alert .atxt .sub{color:var(--szary2);margin-top:3px;font-size:11.5px}
+
+  /* ---------- Sekcja agentów ---------- */
+  .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+  .sec-head h2{font-size:14px;font-weight:600;color:var(--purpur)}
+  .sec-head a{font-size:12px;color:var(--magenta);font-weight:600;text-decoration:none}
+
+  .agent-card{background:var(--bialy);border:1px solid var(--szary);border-radius:14px;padding:12px 13px;margin-bottom:10px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(54,13,43,.04)}
+  .agent-card .av{width:40px;height:40px;border-radius:50%;background:var(--magenta-soft);color:var(--magenta);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;position:relative}
+  .agent-card .av .sd{position:absolute;bottom:-1px;right:-1px;width:11px;height:11px;border-radius:50%;border:2px solid #fff}
+  .sd.on{background:var(--zielony)} .sd.off{background:#c7ccd3}
+  .agent-card .info{flex:1;min-width:0}
+  .agent-card .info .nm{font-size:13.5px;font-weight:600;color:var(--purpur)}
+  .agent-card .info .meta{font-size:11px;color:var(--szary2);margin:2px 0 6px}
+  .agent-card .bar{height:6px;background:#eef0f3;border-radius:99px;overflow:hidden}
+  .agent-card .bar > i{display:block;height:100%;background:var(--magenta);border-radius:99px}
+  .agent-card .right{flex:0 0 auto;text-align:right}
+  .agent-card .right .pct{font-size:15px;font-weight:700;color:var(--purpur)}
+  .agent-card .right .pl{font-size:10px;color:var(--szary2)}
+
+  /* ---------- Dolny tab bar ---------- */
+  .tabbar{flex:0 0 auto;background:var(--bialy);border-top:1px solid var(--szary);display:flex;padding:9px 8px 16px;justify-content:space-around}
+  .tabbar .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--szary2);font-weight:500;flex:1}
+  .tabbar .tb .ic{font-size:19px;line-height:1}
+  .tabbar .tb.active{color:var(--magenta)}
+
+  .caption{color:#fff;opacity:.55;font-size:11.5px;text-align:center;margin-top:26px;max-width:320px;line-height:1.6}
+</style>
+</head>
+<body>
+
+  <div class="pagehead">
+    <div class="logo">freedom <span>·</span> podgląd mobilny</div>
+    <p>Tak właściciel widzi firmę z telefonu — bez wchodzenia w szczegóły.<br>Najważniejsze liczby, alert i kto teraz pracuje.</p>
+    <div class="mk"><span class="dot"></span>Makieta · dane przykładowe</div>
+  </div>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="icons">📶 &nbsp;🔋</span>
+      </div>
+
+      <div class="app-head">
+        <div class="logo">freedom<small>Nieruchomości</small></div>
+        <div class="av">MJ</div>
+      </div>
+
+      <div class="body">
+        <div class="hello">
+          <h1>Dzień dobry, Michał</h1>
+          <p>Piątek, 29 maja 2026 · wszystkie biura</p>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label">Nowe leady dziś</div>
+            <div class="val">47</div>
+            <div class="delta up">▲ 12%</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Telefony wykonane</div>
+            <div class="val">213</div>
+            <div class="delta up">▲ 8%</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Spotkania umówione</div>
+            <div class="val">19</div>
+            <div class="delta up">▲ 5%</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Konwersja lead→spotk.</div>
+            <div class="val">18,4<small>%</small></div>
+            <div class="delta down">▼ 2 pp</div>
+          </div>
+        </div>
+
+        <div class="alert">
+          <div class="ico">!</div>
+          <div class="atxt">
+            <b>5 leadów bez kontaktu ponad 24 h</b>
+            <div class="sub">Mokotów: 3 · Ząbki: 2. Najstarszy czeka 41 h.</div>
+          </div>
+        </div>
+
+        <div class="sec-head">
+          <h2>Kto teraz pracuje</h2>
+          <a href="#">Wszyscy →</a>
+        </div>
+
+        <div class="agent-card">
+          <div class="av">AK<span class="sd on"></span></div>
+          <div class="info">
+            <div class="nm">Anna Kowalczyk</div>
+            <div class="meta">Mokotów · 38 telefonów · 5 spotkań</div>
+            <div class="bar"><i style="width:100%"></i></div>
+          </div>
+          <div class="right"><div class="pct">100%</div><div class="pl">obdzwon.</div></div>
+        </div>
+
+        <div class="agent-card">
+          <div class="av">MW<span class="sd on"></span></div>
+          <div class="info">
+            <div class="nm">Magdalena Wiśniewska</div>
+            <div class="meta">Piaseczno · 34 telefony · 4 spotkania</div>
+            <div class="bar"><i style="width:92%"></i></div>
+          </div>
+          <div class="right"><div class="pct">92%</div><div class="pl">obdzwon.</div></div>
+        </div>
+
+        <div class="agent-card">
+          <div class="av">KZ<span class="sd on"></span></div>
+          <div class="info">
+            <div class="nm">Karolina Zielińska</div>
+            <div class="meta">Ząbki · 22 telefony · 3 spotkania</div>
+            <div class="bar"><i style="width:88%"></i></div>
+          </div>
+          <div class="right"><div class="pct">88%</div><div class="pl">obdzwon.</div></div>
+        </div>
+
+        <div class="agent-card">
+          <div class="av">RS<span class="sd off"></span></div>
+          <div class="info">
+            <div class="nm">Rafał Szymański</div>
+            <div class="meta">Ząbki · 6 telefonów · 1 spotkanie</div>
+            <div class="bar"><i style="width:33%;background:var(--czerwony)"></i></div>
+          </div>
+          <div class="right"><div class="pct" style="color:var(--czerwony)">33%</div><div class="pl">obdzwon.</div></div>
+        </div>
+      </div>
+
+      <div class="tabbar">
+        <div class="tb active"><span class="ic">📊</span>Pulpit</div>
+        <div class="tb"><span class="ic">👥</span>Agenci</div>
+        <div class="tb"><span class="ic">💰</span>Prowizje</div>
+        <div class="tb"><span class="ic">⋯</span>Więcej</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="caption">
+    Makieta poglądowa — dane przykładowe i fikcyjne. Zakres mobilny ustalimy po mapowaniu procesu.
+  </div>
+
+</body>
+</html>

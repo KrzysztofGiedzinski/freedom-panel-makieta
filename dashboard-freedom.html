@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freedom Nieruchomości — panel zarządczy (makieta)</title>
+<style>
+  :root{
+    --magenta:#e50071;
+    --magenta-soft:#fde6f1;
+    --purpur:#360D2B;
+    --szary:#dee0e5;
+    --szary2:#7f8c9a;
+    --tlo:#f6f7f9;
+    --bialy:#ffffff;
+    --tekst:#241019;
+    --zielony:#1f9d6b;
+    --czerwony:#d83a3a;
+    --radius:14px;
+    --cien:0 1px 2px rgba(54,13,43,.06), 0 4px 16px rgba(54,13,43,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--tlo);
+    color:var(--tekst);
+    -webkit-font-smoothing:antialiased;
+    font-size:14px;
+    line-height:1.4;
+  }
+
+  /* ---------- Baner makiety ---------- */
+  .makieta-badge{
+    position:fixed;top:14px;right:18px;z-index:100;
+    background:var(--purpur);color:#fff;
+    font-size:11px;letter-spacing:.06em;font-weight:600;text-transform:uppercase;
+    padding:6px 12px;border-radius:999px;
+    display:flex;align-items:center;gap:7px;
+    box-shadow:var(--cien);opacity:.92;
+  }
+  .makieta-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--magenta)}
+
+  /* ---------- Header ---------- */
+  header.top{
+    background:var(--bialy);border-bottom:1px solid var(--szary);
+    padding:0 28px;display:flex;align-items:center;justify-content:space-between;
+    height:64px;position:sticky;top:0;z-index:50;
+  }
+  .brand{display:flex;align-items:baseline;gap:9px}
+  .brand .logo{font-size:24px;font-weight:700;color:var(--magenta);letter-spacing:-.02em}
+  .brand .sub{font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--szary2);text-transform:uppercase}
+
+  .top-right{display:flex;align-items:center;gap:18px}
+  .biuro-switch{display:flex;background:var(--tlo);border:1px solid var(--szary);border-radius:10px;padding:3px;gap:2px}
+  .biuro-switch button{
+    border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:500;
+    color:var(--szary2);padding:6px 13px;border-radius:7px;cursor:pointer;transition:.15s;
+  }
+  .biuro-switch button.active{background:var(--bialy);color:var(--purpur);font-weight:600;box-shadow:0 1px 3px rgba(54,13,43,.12)}
+  .daterange{font-size:12.5px;color:var(--szary2);display:flex;align-items:center;gap:7px;font-weight:500}
+  .daterange b{color:var(--tekst);font-weight:600}
+  .user{display:flex;align-items:center;gap:9px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--purpur));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
+  .user .uname{font-size:13px;font-weight:600;line-height:1.1}
+  .user .urole{font-size:11px;color:var(--szary2)}
+
+  /* ---------- Tabs wariantów ---------- */
+  nav.tabs{
+    background:var(--bialy);border-bottom:1px solid var(--szary);
+    padding:0 28px;display:flex;gap:4px;position:sticky;top:64px;z-index:49;
+  }
+  nav.tabs button{
+    border:0;background:transparent;font:inherit;cursor:pointer;
+    padding:15px 18px 13px;font-size:13.5px;font-weight:500;color:var(--szary2);
+    border-bottom:2.5px solid transparent;transition:.15s;display:flex;align-items:center;gap:9px;
+  }
+  nav.tabs button .vtag{
+    font-size:11px;font-weight:700;background:var(--szary);color:var(--szary2);
+    width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  }
+  nav.tabs button:hover{color:var(--purpur)}
+  nav.tabs button.active{color:var(--magenta);border-bottom-color:var(--magenta);font-weight:600}
+  nav.tabs button.active .vtag{background:var(--magenta);color:#fff}
+
+  /* ---------- Layout ---------- */
+  main{padding:26px 28px 60px;max-width:1320px;margin:0 auto}
+  .view{display:none;animation:fade .25s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .view-head{margin-bottom:20px}
+  .view-head h1{font-size:20px;font-weight:700;color:var(--purpur);letter-spacing:-.01em}
+  .view-head p{font-size:13px;color:var(--szary2);margin-top:3px}
+
+  /* ---------- KPI ---------- */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+  .kpi{background:var(--bialy);border:1px solid var(--szary);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--cien)}
+  .kpi .label{font-size:12px;color:var(--szary2);font-weight:500;margin-bottom:9px}
+  .kpi .val{font-size:28px;font-weight:700;color:var(--purpur);letter-spacing:-.02em;line-height:1}
+  .kpi .val small{font-size:15px;font-weight:600;color:var(--szary2)}
+  .kpi .delta{font-size:12px;font-weight:600;margin-top:9px;display:inline-flex;align-items:center;gap:4px}
+  .delta.up{color:var(--zielony)} .delta.down{color:var(--czerwony)} .delta.flat{color:var(--szary2)}
+
+  /* ---------- Karty/sekcje ---------- */
+  .card{background:var(--bialy);border:1px solid var(--szary);border-radius:var(--radius);box-shadow:var(--cien);overflow:hidden}
+  .card-head{padding:16px 20px;border-bottom:1px solid var(--szary);display:flex;align-items:center;justify-content:space-between}
+  .card-head h2{font-size:15px;font-weight:600;color:var(--purpur)}
+  .card-head .hint{font-size:12px;color:var(--szary2)}
+  .cols{display:grid;gap:18px}
+  .cols.c-2{grid-template-columns:1.7fr 1fr}
+
+  /* ---------- Alert ---------- */
+  .alert{background:var(--magenta-soft);border:1px solid #f6c4dd;border-left:4px solid var(--magenta);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;gap:13px;align-items:flex-start}
+  .alert .ico{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--magenta);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+  .alert .atxt{font-size:13px}
+  .alert .atxt b{color:var(--purpur)}
+  .alert .atxt .sub{color:var(--szary2);margin-top:3px;font-size:12.5px}
+
+  /* ---------- Tabela ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--szary2);font-weight:600;padding:11px 20px;background:#fafbfc;border-bottom:1px solid var(--szary)}
+  tbody td{padding:12px 20px;border-bottom:1px solid #eef0f3;vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fcfcfd}
+  .agent{display:flex;align-items:center;gap:10px}
+  .agent .av{width:30px;height:30px;border-radius:50%;background:var(--magenta-soft);color:var(--magenta);font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .agent .an{font-weight:600;color:var(--purpur)}
+  .pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;display:inline-block}
+  .pill.gray{background:#eef0f3;color:var(--szary2)}
+  .bar{height:7px;background:#eef0f3;border-radius:99px;overflow:hidden;width:90px;display:inline-block;vertical-align:middle}
+  .bar > i{display:block;height:100%;background:var(--magenta);border-radius:99px}
+  .pct{font-weight:600;margin-left:8px;font-size:12.5px}
+  .status{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500}
+  .status .d{width:8px;height:8px;border-radius:50%}
+  .status.on .d{background:var(--zielony)} .status.on{color:var(--zielony)}
+  .status.off .d{background:#c7ccd3} .status.off{color:var(--szary2)}
+
+  /* ---------- Mini wykres słupkowy ---------- */
+  .barchart{display:flex;align-items:flex-end;gap:6px;height:150px;padding:18px 20px 8px}
+  .barchart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .barchart .col .b{width:100%;max-width:26px;background:linear-gradient(180deg,var(--magenta),#f5559e);border-radius:5px 5px 0 0;transition:.3s}
+  .barchart .col .b.muted{background:#e6e8ec}
+  .barchart .col .x{font-size:10.5px;color:var(--szary2)}
+
+  /* ---------- Kanban (wariant B) ---------- */
+  .kanban{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:22px}
+  .kcol{background:var(--bialy);border:1px solid var(--szary);border-radius:12px;padding:10px;min-height:230px}
+  .kcol .kh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:2px 4px}
+  .kcol .kh .kt{font-size:11.5px;font-weight:600;color:var(--purpur)}
+  .kcol .kh .kc{font-size:11px;font-weight:700;color:#fff;background:var(--szary2);border-radius:99px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+  .kcol:last-child .kh .kc{background:var(--zielony)}
+  .kcol:nth-last-child(2) .kh .kc{background:var(--magenta)}
+  .kcard{background:#fafbfc;border:1px solid #eef0f3;border-radius:9px;padding:9px 10px;margin-bottom:8px}
+  .kcard .ka{font-size:12px;font-weight:600;color:var(--purpur);line-height:1.25}
+  .kcard .km{font-size:10.5px;color:var(--szary2);margin-top:4px;display:flex;justify-content:space-between}
+  .kcard .kp{font-size:11px;font-weight:600;color:var(--magenta);margin-top:4px}
+
+  /* ---------- Lista transakcji ---------- */
+  .faktura{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px}
+  .faktura.ok{background:#e3f5ee;color:var(--zielony)}
+  .faktura.wait{background:#fff3e0;color:#b87503}
+  .faktura.late{background:#fde6e6;color:var(--czerwony)}
+
+  /* ---------- Widok 3 biur (wariant C) ---------- */
+  .biura-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+  .biuro-card{background:var(--bialy);border:1px solid var(--szary);border-radius:var(--radius);box-shadow:var(--cien);overflow:hidden}
+  .biuro-card .bc-head{padding:15px 18px;background:linear-gradient(135deg,var(--purpur),#5a1f49);color:#fff;display:flex;align-items:center;justify-content:space-between}
+  .biuro-card .bc-head .nm{font-size:15px;font-weight:600}
+  .biuro-card .bc-head .ag{font-size:11.5px;opacity:.85}
+  .biuro-card .bc-body{padding:6px 18px 14px}
+  .biuro-stat{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #eef0f3}
+  .biuro-stat:last-child{border-bottom:0}
+  .biuro-stat .bl{font-size:12.5px;color:var(--szary2)}
+  .biuro-stat .bv{font-size:15px;font-weight:700;color:var(--purpur)}
+  .biuro-stat .bv small{font-size:11.5px;font-weight:500;color:var(--szary2)}
+
+  .rank{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid #eef0f3}
+  .rank:last-child{border-bottom:0}
+  .rank .pos{width:24px;height:24px;border-radius:7px;background:#eef0f3;color:var(--szary2);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .rank:nth-child(1) .pos{background:var(--magenta);color:#fff}
+  .rank .rn{font-weight:600;color:var(--purpur);font-size:13px;flex:1}
+  .rank .rb{font-size:11.5px;color:var(--szary2)}
+  .rank .rv{font-weight:700;color:var(--purpur);font-size:13.5px}
+
+  .footnote{margin-top:30px;text-align:center;font-size:11.5px;color:var(--szary2);line-height:1.6}
+  .footnote b{color:var(--szary2)}
+
+  @media(max-width:1100px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr)}
+    .kanban{grid-template-columns:repeat(3,1fr)}
+    .biura-grid{grid-template-columns:1fr}
+    .cols.c-2{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="makieta-badge"><span class="dot"></span>Makieta · dane przykładowe</div>
+
+<header class="top">
+  <div class="brand">
+    <span class="logo">freedom</span>
+    <span class="sub">Nieruchomości</span>
+  </div>
+  <div class="top-right">
+    <div class="biuro-switch">
+      <button class="active">Wszystkie biura</button>
+      <button>Mokotów</button>
+      <button>Piaseczno</button>
+      <button>Ząbki</button>
+    </div>
+    <div class="daterange">📅 <b>Dziś</b> · 29 maja 2026</div>
+    <div class="user">
+      <div class="avatar">MJ</div>
+      <div>
+        <div class="uname">Michał Jeziorski</div>
+        <div class="urole">Właściciel</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-view="a"><span class="vtag">A</span>Aktywność agentów</button>
+  <button data-view="b"><span class="vtag">B</span>Pipeline i prowizje</button>
+  <button data-view="c"><span class="vtag">C</span>Widok zarządczy 3 biur</button>
+</nav>
+
+<main>
+
+  <!-- =================== WARIANT A =================== -->
+  <section class="view active" id="view-a">
+    <div class="view-head">
+      <h1>Aktywność agentów — dziś</h1>
+      <p>Kto, ile leadów obdzwonił i z jakim skutkiem. Podgląd na żywo, bez dzwonienia do handlowców.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="label">Nowe leady dziś</div>
+        <div class="val">47</div>
+        <div class="delta up">▲ 12% vs wczoraj</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Telefony wykonane</div>
+        <div class="val">213</div>
+        <div class="delta up">▲ 8% vs wczoraj</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Spotkania umówione</div>
+        <div class="val">19</div>
+        <div class="delta up">▲ 5% vs wczoraj</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Konwersja lead → spotkanie</div>
+        <div class="val">18,4<small>%</small></div>
+        <div class="delta down">▼ 2 pp vs wczoraj</div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <div class="ico">!</div>
+      <div class="atxt">
+        <b>5 leadów bez kontaktu ponad 24 h</b>
+        <div class="sub">Mokotów: 3 · Ząbki: 2. Najstarszy lead czeka 41 h (przydzielony: Rafał Szymański).</div>
+      </div>
+    </div>
+
+    <div class="cols c-2">
+      <div class="card">
+        <div class="card-head"><h2>Handlowcy — dziś</h2><span class="hint">8 agentów · 3 biura</span></div>
+        <table>
+          <thead>
+            <tr><th>Agent</th><th>Biuro</th><th>Leady</th><th>Telefony</th><th>% obdzwonionych</th><th>Spotkania</th><th>Aktywność</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="agent"><div class="av">AK</div><span class="an">Anna Kowalczyk</span></div></td>
+              <td><span class="pill gray">Mokotów</span></td><td>9</td><td>38</td>
+              <td><span class="bar"><i style="width:100%"></i></span><span class="pct">100%</span></td>
+              <td>5</td><td>2 min temu</td><td><span class="status on"><span class="d"></span>online</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">PN</div><span class="an">Piotr Nowak</span></div></td>
+              <td><span class="pill gray">Mokotów</span></td><td>7</td><td>29</td>
+              <td><span class="bar"><i style="width:86%"></i></span><span class="pct">86%</span></td>
+              <td>3</td><td>11 min temu</td><td><span class="status on"><span class="d"></span>online</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">MW</div><span class="an">Magdalena Wiśniewska</span></div></td>
+              <td><span class="pill gray">Piaseczno</span></td><td>8</td><td>34</td>
+              <td><span class="bar"><i style="width:92%"></i></span><span class="pct">92%</span></td>
+              <td>4</td><td>5 min temu</td><td><span class="status on"><span class="d"></span>online</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">TL</div><span class="an">Tomasz Lewandowski</span></div></td>
+              <td><span class="pill gray">Piaseczno</span></td><td>6</td><td>18</td>
+              <td><span class="bar"><i style="width:64%"></i></span><span class="pct">64%</span></td>
+              <td>1</td><td>48 min temu</td><td><span class="status off"><span class="d"></span>offline</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">KZ</div><span class="an">Karolina Zielińska</span></div></td>
+              <td><span class="pill gray">Ząbki</span></td><td>5</td><td>22</td>
+              <td><span class="bar"><i style="width:88%"></i></span><span class="pct">88%</span></td>
+              <td>3</td><td>9 min temu</td><td><span class="status on"><span class="d"></span>online</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">MW</div><span class="an">Marcin Wójcik</span></div></td>
+              <td><span class="pill gray">Ząbki</span></td><td>4</td><td>9</td>
+              <td><span class="bar"><i style="width:40%"></i></span><span class="pct">40%</span></td>
+              <td>0</td><td>2 h temu</td><td><span class="status off"><span class="d"></span>offline</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">AK</div><span class="an">Agnieszka Kamińska</span></div></td>
+              <td><span class="pill gray">Mokotów</span></td><td>5</td><td>24</td>
+              <td><span class="bar"><i style="width:96%"></i></span><span class="pct">96%</span></td>
+              <td>2</td><td>17 min temu</td><td><span class="status on"><span class="d"></span>online</span></td>
+            </tr>
+            <tr>
+              <td><div class="agent"><div class="av">RS</div><span class="an">Rafał Szymański</span></div></td>
+              <td><span class="pill gray">Ząbki</span></td><td>3</td><td>6</td>
+              <td><span class="bar"><i style="width:33%"></i></span><span class="pct">33%</span></td>
+              <td>1</td><td>3 h temu</td><td><span class="status off"><span class="d"></span>offline</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Telefony w ciągu dnia</h2><span class="hint">godz. 8–18</span></div>
+        <div class="barchart">
+          <div class="col"><div class="b" style="height:32%"></div><span class="x">8</span></div>
+          <div class="col"><div class="b" style="height:58%"></div><span class="x">9</span></div>
+          <div class="col"><div class="b" style="height:80%"></div><span class="x">10</span></div>
+          <div class="col"><div class="b" style="height:95%"></div><span class="x">11</span></div>
+          <div class="col"><div class="b" style="height:48%"></div><span class="x">12</span></div>
+          <div class="col"><div class="b" style="height:40%"></div><span class="x">13</span></div>
+          <div class="col"><div class="b" style="height:72%"></div><span class="x">14</span></div>
+          <div class="col"><div class="b" style="height:88%"></div><span class="x">15</span></div>
+          <div class="col"><div class="b muted" style="height:55%"></div><span class="x">16</span></div>
+          <div class="col"><div class="b muted" style="height:30%"></div><span class="x">17</span></div>
+          <div class="col"><div class="b muted" style="height:12%"></div><span class="x">18</span></div>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid var(--szary);font-size:12.5px;color:var(--szary2)">
+          Szczyt aktywności: <b style="color:var(--purpur)">11:00</b> · średni czas reakcji na nowy lead: <b style="color:var(--purpur)">14 min</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== WARIANT B =================== -->
+  <section class="view" id="view-b">
+    <div class="view-head">
+      <h1>Pipeline transakcji i prowizje</h1>
+      <p>Cała droga od leada do rozliczonej prowizji. Widać, gdzie utykają pieniądze.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="label">Wartość pipeline</div>
+        <div class="val">8,4<small> mln zł</small></div>
+        <div class="delta up">▲ 0,9 mln vs ub. mc</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Prowizje w toku</div>
+        <div class="val">312<small> tys. zł</small></div>
+        <div class="delta flat">42 transakcje</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Zafakturowane (mc)</div>
+        <div class="val">148,5<small> tys. zł</small></div>
+        <div class="delta up">▲ 11% vs ub. mc</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Prowizje zagrożone</div>
+        <div class="val" style="color:var(--czerwony)">18,2<small> tys. zł</small></div>
+        <div class="delta down">▼ faktura po terminie</div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <div class="ico">!</div>
+      <div class="atxt">
+        <b>Prowizja 18 200 zł — akt notarialny 10 dni temu, faktura niewystawiona</b>
+        <div class="sub">ul. Puławska 142, Mokotów · agent: Piotr Nowak · termin płatności mija za 4 dni.</div>
+      </div>
+    </div>
+
+    <div class="kanban">
+      <div class="kcol"><div class="kh"><span class="kt">Lead</span><span class="kc">12</span></div>
+        <div class="kcard"><div class="ka">ul. Domaniewska 24</div><div class="km"><span>Mokotów</span><span>A. Kowalczyk</span></div></div>
+        <div class="kcard"><div class="ka">ul. Wojska Polsk. 8</div><div class="km"><span>Ząbki</span><span>K. Zielińska</span></div></div>
+      </div>
+      <div class="kcol"><div class="kh"><span class="kt">Kontakt</span><span class="kc">9</span></div>
+        <div class="kcard"><div class="ka">os. Słoneczne 3/12</div><div class="km"><span>Piaseczno</span><span>M. Wiśniewska</span></div></div>
+      </div>
+      <div class="kcol"><div class="kh"><span class="kt">Prezentacja</span><span class="kc">7</span></div>
+        <div class="kcard"><div class="ka">ul. Bukowińska 5</div><div class="km"><span>Mokotów</span><span>P. Nowak</span></div><div class="kp">~ 21 000 zł</div></div>
+      </div>
+      <div class="kcol"><div class="kh"><span class="kt">Oferta</span><span class="kc">5</span></div>
+        <div class="kcard"><div class="ka">ul. Sienkiewicza 11</div><div class="km"><span>Ząbki</span><span>R. Szymański</span></div><div class="kp">~ 16 500 zł</div></div>
+      </div>
+      <div class="kcol"><div class="kh"><span class="kt">Umowa przedwst.</span><span class="kc">4</span></div>
+        <div class="kcard"><div class="ka">ul. Górczewska 90</div><div class="km"><span>Piaseczno</span><span>T. Lewandowski</span></div><div class="kp">~ 24 000 zł</div></div>
+      </div>
+      <div class="kcol"><div class="kh"><span class="kt">Akt notarialny</span><span class="kc">3</span></div>
+        <div class="kcard"><div class="ka">ul. Puławska 142</div><div class="km"><span>Mokotów</span><span>P. Nowak</span></div><div class="kp">18 200 zł</div></div>
+      </div>
+      <div class="kcol"><div class="kh"><span class="kt">Prowizja OK</span><span class="kc">2</span></div>
+        <div class="kcard"><div class="ka">ul. Marszałkowska 7</div><div class="km"><span>Mokotów</span><span>A. Kamińska</span></div><div class="kp">22 800 zł</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Transakcje w toku — pieniądze do rozliczenia</h2><span class="hint">sortowane wg etapu</span></div>
+      <table>
+        <thead><tr><th>Nieruchomość</th><th>Biuro</th><th>Agent</th><th>Wartość</th><th>Prowizja</th><th>Etap</th><th>Faktura</th></tr></thead>
+        <tbody>
+          <tr><td><b>ul. Puławska 142</b></td><td><span class="pill gray">Mokotów</span></td><td>P. Nowak</td><td>910 000 zł</td><td><b>18 200 zł</b></td><td>Akt notarialny</td><td><span class="faktura late">po terminie</span></td></tr>
+          <tr><td><b>ul. Marszałkowska 7</b></td><td><span class="pill gray">Mokotów</span></td><td>A. Kamińska</td><td>1 140 000 zł</td><td><b>22 800 zł</b></td><td>Prowizja rozliczona</td><td><span class="faktura ok">opłacona</span></td></tr>
+          <tr><td><b>ul. Górczewska 90</b></td><td><span class="pill gray">Piaseczno</span></td><td>T. Lewandowski</td><td>1 200 000 zł</td><td><b>24 000 zł</b></td><td>Umowa przedwstępna</td><td><span class="faktura wait">oczekuje</span></td></tr>
+          <tr><td><b>ul. Bukowińska 5</b></td><td><span class="pill gray">Mokotów</span></td><td>P. Nowak</td><td>1 050 000 zł</td><td><b>21 000 zł</b></td><td>Prezentacja</td><td><span class="faktura wait">oczekuje</span></td></tr>
+          <tr><td><b>ul. Sienkiewicza 11</b></td><td><span class="pill gray">Ząbki</span></td><td>R. Szymański</td><td>825 000 zł</td><td><b>16 500 zł</b></td><td>Oferta</td><td><span class="faktura wait">oczekuje</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- =================== WARIANT C =================== -->
+  <section class="view" id="view-c">
+    <div class="view-head">
+      <h1>Widok zarządczy — 3 biura</h1>
+      <p>Mokotów, Piaseczno i Ząbki obok siebie. Maj 2026 — dane narastająco.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="label">Leady w maju (firma)</div>
+        <div class="val">316</div>
+        <div class="delta up">▲ 14% vs kwiecień</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Transakcje sfinalizowane</div>
+        <div class="val">13</div>
+        <div class="delta up">▲ 3 vs kwiecień</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Sprzedaż (wartość)</div>
+        <div class="val">6,7<small> mln zł</small></div>
+        <div class="delta up">▲ 18% vs kwiecień</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Prowizje (mc)</div>
+        <div class="val">178<small> tys. zł</small></div>
+        <div class="delta up">▲ 16% vs kwiecień</div>
+      </div>
+    </div>
+
+    <div class="biura-grid">
+      <div class="biuro-card">
+        <div class="bc-head"><span class="nm">Mokotów</span><span class="ag">4 agentów</span></div>
+        <div class="bc-body">
+          <div class="biuro-stat"><span class="bl">Leady (mc)</span><span class="bv">142</span></div>
+          <div class="biuro-stat"><span class="bl">Konwersja</span><span class="bv">21<small>%</small></span></div>
+          <div class="biuro-stat"><span class="bl">Transakcje</span><span class="bv">6 <small>· 3,2 mln zł</small></span></div>
+          <div class="biuro-stat"><span class="bl">Prowizje</span><span class="bv">84<small> tys. zł</small></span></div>
+        </div>
+      </div>
+      <div class="biuro-card">
+        <div class="bc-head"><span class="nm">Piaseczno</span><span class="ag">3 agentów</span></div>
+        <div class="bc-body">
+          <div class="biuro-stat"><span class="bl">Leady (mc)</span><span class="bv">98</span></div>
+          <div class="biuro-stat"><span class="bl">Konwersja</span><span class="bv">18<small>%</small></span></div>
+          <div class="biuro-stat"><span class="bl">Transakcje</span><span class="bv">4 <small>· 2,1 mln zł</small></span></div>
+          <div class="biuro-stat"><span class="bl">Prowizje</span><span class="bv">56<small> tys. zł</small></span></div>
+        </div>
+      </div>
+      <div class="biuro-card">
+        <div class="bc-head"><span class="nm">Ząbki</span><span class="ag">3 agentów</span></div>
+        <div class="bc-body">
+          <div class="biuro-stat"><span class="bl">Leady (mc)</span><span class="bv">76</span></div>
+          <div class="biuro-stat"><span class="bl">Konwersja</span><span class="bv">16<small>%</small></span></div>
+          <div class="biuro-stat"><span class="bl">Transakcje</span><span class="bv">3 <small>· 1,4 mln zł</small></span></div>
+          <div class="biuro-stat"><span class="bl">Prowizje</span><span class="bv">38<small> tys. zł</small></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols c-2">
+      <div class="card">
+        <div class="card-head"><h2>Sprzedaż — ostatnie 6 miesięcy (firma)</h2><span class="hint">w mln zł</span></div>
+        <div class="barchart">
+          <div class="col"><div class="b muted" style="height:48%"></div><span class="x">gru</span></div>
+          <div class="col"><div class="b muted" style="height:40%"></div><span class="x">sty</span></div>
+          <div class="col"><div class="b muted" style="height:60%"></div><span class="x">lut</span></div>
+          <div class="col"><div class="b muted" style="height:55%"></div><span class="x">mar</span></div>
+          <div class="col"><div class="b" style="height:78%"></div><span class="x">kwi</span></div>
+          <div class="col"><div class="b" style="height:95%"></div><span class="x">maj</span></div>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid var(--szary);font-size:12.5px;color:var(--szary2)">
+          Najlepszy miesiąc w półroczu: <b style="color:var(--purpur)">maj — 6,7 mln zł</b>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Ranking agentów (maj)</h2><span class="hint">wg prowizji</span></div>
+        <div class="rank"><span class="pos">1</span><span class="rn">Anna Kowalczyk</span><span class="rb">Mokotów</span><span class="rv">38,4 tys.</span></div>
+        <div class="rank"><span class="pos">2</span><span class="rn">Magdalena Wiśniewska</span><span class="rb">Piaseczno</span><span class="rv">31,2 tys.</span></div>
+        <div class="rank"><span class="pos">3</span><span class="rn">Agnieszka Kamińska</span><span class="rb">Mokotów</span><span class="rv">27,8 tys.</span></div>
+        <div class="rank"><span class="pos">4</span><span class="rn">Karolina Zielińska</span><span class="rb">Ząbki</span><span class="rv">22,1 tys.</span></div>
+        <div class="rank"><span class="pos">5</span><span class="rn">Piotr Nowak</span><span class="rb">Mokotów</span><span class="rv">19,5 tys.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footnote">
+    <b>Makieta poglądowa — wszystkie dane są przykładowe i fikcyjne.</b><br>
+    Dokument roboczy do rozmowy o procesie. Ostateczny zakres i wskaźniki ustalimy po mapowaniu Państwa procesu sprzedaży.
+  </div>
+
+</main>
+
+<script>
+  // Przełączanie wariantów
+  document.querySelectorAll('nav.tabs button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+  // Przełącznik biur — tylko wizualny (makieta)
+  document.querySelectorAll('.biuro-switch button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.biuro-switch button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

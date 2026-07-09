@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#360D2B">
+<title>Freedom Nieruchomości — raport dzienny agenta (makieta)</title>
+<style>
+  :root{
+    --magenta:#e50071;
+    --magenta-soft:#fde6f1;
+    --purpur:#360D2B;
+    --szary:#dee0e5;
+    --szary2:#7f8c9a;
+    --bialy:#fff;
+    --tekst:#241019;
+    --zielony:#1f9d6b;
+    --zielony-soft:#e3f5ee;
+    --czerwony:#d83a3a;
+    --tlo:#f6f7f9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:#2a0a22;color:var(--tekst);-webkit-font-smoothing:antialiased;
+    display:flex;justify-content:center;
+  }
+  .app{
+    width:100%;max-width:440px;background:var(--tlo);
+    min-height:100vh;display:flex;flex-direction:column;position:relative;
+    box-shadow:0 0 60px rgba(0,0,0,.4);
+  }
+
+  /* ---------- Header ---------- */
+  .app-head{
+    background:var(--bialy);padding:calc(14px + env(safe-area-inset-top)) 18px 16px;
+    border-bottom:1px solid var(--szary);position:sticky;top:0;z-index:20;
+  }
+  .head-row{display:flex;align-items:center;justify-content:space-between}
+  .logo{font-size:20px;font-weight:700;color:var(--magenta);letter-spacing:-.02em}
+  .logo small{font-size:9px;font-weight:600;letter-spacing:.18em;color:var(--szary2);text-transform:uppercase;display:block;margin-top:-3px}
+  .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--purpur));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
+  .hello{margin-top:13px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .hello h1{font-size:19px;font-weight:700;color:var(--purpur);letter-spacing:-.01em}
+  .hello p{font-size:12px;color:var(--szary2);margin-top:1px}
+  .streak{flex:0 0 auto;background:#fff5e6;border:1px solid #ffe0b0;color:#b87503;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:999px;white-space:nowrap}
+
+  /* Cel dnia — pasek na żywo */
+  .goalbar{margin-top:14px;background:var(--tlo);border:1px solid var(--szary);border-radius:12px;padding:10px 12px}
+  .goalbar .gtop{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;font-weight:600;color:var(--szary2)}
+  .goalbar .gtop b{color:var(--purpur);font-size:12.5px}
+  .goalbar .gtop .gval{font-weight:700;color:var(--magenta)}
+  .goalbar .track{height:7px;background:#eef0f3;border-radius:99px;overflow:hidden;margin-top:7px}
+  .goalbar .track > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--magenta),#ff7ab8);border-radius:99px;transition:width .35s ease}
+  .goalbar .track > i.done{background:var(--zielony)}
+
+  /* ---------- Body ---------- */
+  .body{flex:1;overflow-y:auto;padding:16px 16px 120px;-webkit-overflow-scrolling:touch}
+  .sec-title{font-size:13px;font-weight:700;color:var(--purpur);margin:4px 2px 11px;text-transform:uppercase;letter-spacing:.03em}
+  .sec-title.mt{margin-top:22px}
+  .sec-title small{font-weight:500;color:var(--szary2);text-transform:none;letter-spacing:0}
+
+  /* Licznik aktywności */
+  .card{background:var(--bialy);border:1px solid var(--szary);border-radius:16px;box-shadow:0 2px 8px rgba(54,13,43,.05);overflow:hidden}
+  .fld{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid #eef0f3}
+  .fld:last-child{border-bottom:0}
+  .fld .fi{width:36px;height:36px;border-radius:10px;background:var(--magenta-soft);display:flex;align-items:center;justify-content:center;font-size:17px;flex:0 0 auto}
+  .fld .fl{flex:1;min-width:0}
+  .fld .fl .n{font-size:13px;font-weight:600;color:var(--purpur);line-height:1.25}
+  .fld .fl .s{font-size:10.5px;color:var(--szary2);margin-top:1px}
+  .stepper{display:flex;align-items:center;gap:0;flex:0 0 auto}
+  .stepper button{
+    width:38px;height:38px;border-radius:11px;border:1px solid var(--szary);background:var(--bialy);
+    font:inherit;font-size:19px;font-weight:600;color:var(--szary2);cursor:pointer;transition:.12s;line-height:1;
+  }
+  .stepper button.plus{background:var(--magenta);border-color:var(--magenta);color:#fff}
+  .stepper button:active{transform:scale(.92)}
+  .stepper .val{min-width:44px;text-align:center;font-size:19px;font-weight:700;color:var(--purpur);letter-spacing:-.02em}
+  .stepper .val.bump{animation:bump .25s ease}
+  @keyframes bump{40%{transform:scale(1.28);color:var(--magenta)}}
+
+  /* Sprzedaż z systemu (read-only) */
+  .sys{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .sysbox{background:var(--bialy);border:1px solid var(--szary);border-radius:16px;padding:14px 15px;box-shadow:0 2px 8px rgba(54,13,43,.05)}
+  .sysbox .label{font-size:11px;color:var(--szary2);font-weight:500;margin-bottom:7px;line-height:1.3}
+  .sysbox .val{font-size:22px;font-weight:700;color:var(--purpur);letter-spacing:-.02em;line-height:1}
+  .sysbox .val small{font-size:12px;font-weight:600;color:var(--szary2)}
+  .syshint{display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--szary2);line-height:1.45;margin-top:9px;padding:0 3px}
+  .syshint .i{flex:0 0 auto;width:16px;height:16px;border-radius:50%;background:var(--zielony-soft);color:var(--zielony);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+
+  /* Cel miesiąca */
+  .goal-m{background:var(--bialy);border:1px solid var(--szary);border-radius:16px;padding:15px;box-shadow:0 2px 8px rgba(54,13,43,.05)}
+  .goal-m .gm1{display:flex;justify-content:space-between;align-items:baseline}
+  .goal-m .gm1 .t{font-size:13px;font-weight:600;color:var(--purpur)}
+  .goal-m .gm1 .v{font-size:15px;font-weight:700;color:var(--magenta)}
+  .goal-m .track{position:relative;height:9px;background:#eef0f3;border-radius:99px;margin-top:26px}
+  .goal-m .track .fill{position:absolute;left:0;top:0;bottom:0;width:60%;background:linear-gradient(90deg,var(--magenta),#ff7ab8);border-radius:99px}
+  .goal-m .track .today{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--purpur);left:29%;border-radius:2px}
+  .goal-m .track .today::after{content:'dziś';position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:9.5px;font-weight:700;color:var(--purpur);letter-spacing:.04em;text-transform:uppercase}
+  .goal-m .gm2{display:flex;justify-content:space-between;font-size:10.5px;color:var(--szary2);margin-top:8px}
+  .goal-m .ahead{margin-top:11px;font-size:12px;font-weight:600;color:var(--zielony);background:var(--zielony-soft);border-radius:10px;padding:8px 11px;display:flex;align-items:center;gap:7px}
+
+  /* Notatka */
+  .note{width:100%;border:1px solid var(--szary);border-radius:16px;background:var(--bialy);font:inherit;font-size:13px;color:var(--tekst);padding:13px 14px;resize:none;min-height:76px;box-shadow:0 2px 8px rgba(54,13,43,.05)}
+  .note::placeholder{color:#aeb5bf}
+  .note:focus{outline:2px solid var(--magenta);outline-offset:-1px}
+
+  /* Pasek zapisu */
+  .savebar{
+    position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+    border-top:1px solid var(--szary);padding:12px 16px calc(14px + env(safe-area-inset-bottom));z-index:30;
+  }
+  .save{width:100%;border:0;background:var(--magenta);color:#fff;font:inherit;font-size:15px;font-weight:700;padding:15px;border-radius:14px;cursor:pointer;transition:.15s;box-shadow:0 6px 18px rgba(229,0,113,.35)}
+  .save:active{transform:scale(.98)}
+  .savehint{text-align:center;font-size:10.5px;color:var(--szary2);margin-top:7px}
+
+  /* Ekran sukcesu */
+  .done-ov{position:absolute;inset:0;background:var(--tlo);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+  .done-ov.show{display:flex;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .check{width:84px;height:84px;border-radius:50%;background:var(--zielony);color:#fff;display:flex;align-items:center;justify-content:center;font-size:42px;animation:pop .45s cubic-bezier(.2,1.6,.4,1);box-shadow:0 12px 32px rgba(31,157,107,.35)}
+  @keyframes pop{from{transform:scale(.3);opacity:0}}
+  .done-ov h2{font-size:21px;font-weight:700;color:var(--purpur);margin-top:22px}
+  .done-ov .d1{font-size:13px;color:var(--szary2);margin-top:6px;line-height:1.55;max-width:280px}
+  .badges{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--bialy);border:1px solid var(--szary);border-radius:999px;font-size:12px;font-weight:700;color:var(--purpur);padding:8px 15px;box-shadow:0 2px 8px rgba(54,13,43,.06)}
+  .badge.hot{background:#fff5e6;border-color:#ffe0b0;color:#b87503}
+  .badge.pink{background:var(--magenta-soft);border-color:#f6c4dd;color:var(--magenta)}
+  .done-ov .again{margin-top:28px;border:0;background:var(--purpur);color:#fff;font:inherit;font-size:13.5px;font-weight:600;padding:12px 26px;border-radius:12px;cursor:pointer}
+
+  /* Badge makiety */
+  .mk{position:fixed;top:calc(8px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:60;background:var(--purpur);color:#fff;font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;padding:4px 11px;border-radius:999px;display:flex;align-items:center;gap:6px;opacity:.92}
+  .mk .dot{width:6px;height:6px;border-radius:50%;background:#ff7ab8}
+
+  .foot{font-size:10.5px;color:var(--szary2);line-height:1.55;margin-top:20px;text-align:center;padding:0 8px}
+</style>
+</head>
+<body>
+
+<div class="mk"><span class="dot"></span>Makieta · dane przykładowe</div>
+
+<div class="app">
+  <header class="app-head">
+    <div class="head-row">
+      <div class="logo">freedom<small>Nieruchomości</small></div>
+      <div class="av">AK</div>
+    </div>
+    <div class="hello">
+      <div>
+        <h1>Cześć, Aniu 👋</h1>
+        <p id="today">Raport dzienny</p>
+      </div>
+      <div class="streak">🔥 6 dni z rzędu</div>
+    </div>
+    <div class="goalbar">
+      <div class="gtop"><b>Cel dnia: 30 telefonów</b><span class="gval" id="goal-txt">12 / 30</span></div>
+      <div class="track"><i id="goal-fill"></i></div>
+    </div>
+  </header>
+
+  <div class="body">
+
+    <div class="sec-title">Aktywność dziś <small>· stuknij + po każdej czynności</small></div>
+    <div class="card" id="fields"></div>
+
+    <div class="sec-title mt">Oferty w pracy</div>
+    <div class="card" id="fields2"></div>
+
+    <div class="sec-title mt">Twoja sprzedaż <small>· z systemu transakcji</small></div>
+    <div class="sys">
+      <div class="sysbox"><div class="label">W tym miesiącu</div><div class="val">38,5<small> tys. zł</small></div></div>
+      <div class="sysbox"><div class="label">Narastająco (rok)</div><div class="val">214<small> tys. zł</small></div></div>
+    </div>
+    <div class="syshint"><span class="i">✓</span>Te liczby uzupełniają się same po zaksięgowaniu transakcji — nie musisz nic wpisywać.</div>
+
+    <div class="sec-title mt">Cel miesiąca <small>· ustalony z brokerem</small></div>
+    <div class="goal-m">
+      <div class="gm1"><span class="t">Umowy pośrednictwa</span><span class="v">3 / 5</span></div>
+      <div class="track"><span class="fill"></span><span class="today"></span></div>
+      <div class="gm2"><span>1 lipca</span><span>31 lipca</span></div>
+      <div class="ahead">🎯 Jesteś 2 dni przed planem — tak trzymaj!</div>
+    </div>
+
+    <div class="sec-title mt">Notatka dla siebie <small>· widoczna tylko dla Ciebie</small></div>
+    <textarea class="note" placeholder="Np. oddzwonić jutro do p. Malinowskiej ws. mieszkania na Woli…"></textarea>
+
+    <p class="foot">Makieta — dane przykładowe i fikcyjne. Zakres pól i cele ustalimy po zmapowaniu procesu.</p>
+  </div>
+
+  <div class="savebar">
+    <button class="save" onclick="save()">Zapisz raport dnia</button>
+    <div class="savehint">Średni czas wypełnienia: 42 sekundy</div>
+  </div>
+
+  <!-- Ekran sukcesu -->
+  <div class="done-ov" id="done">
+    <div class="check">✓</div>
+    <h2>Raport zapisany!</h2>
+    <p class="d1">Twój broker widzi już dzisiejsze liczby. Do zobaczenia jutro — przypomnimy Ci o 19:30.</p>
+    <div class="badges">
+      <span class="badge hot">🔥 7. dzień z rzędu</span>
+      <span class="badge pink">+10 pkt</span>
+      <span class="badge">🥈 2. miejsce w biurze</span>
+    </div>
+    <button class="again" onclick="reset()">Wróć do raportu (makieta)</button>
+  </div>
+</div>
+
+<script>
+  // ---------- Pola raportu (lista z wizji: 10 metryk dziennych) ----------
+  var FIELDS = [
+    {id:'tel',   ic:'📞', n:'Rozmowy telefoniczne', s:'cel dnia: 30', v:12, goal:true},
+    {id:'sumo',  ic:'📅', n:'Spotkania umówione',   s:'na kolejne dni', v:2},
+    {id:'sodb',  ic:'🤝', n:'Spotkania odbyte',     s:'dzisiaj', v:1},
+    {id:'prez',  ic:'🏠', n:'Prezentacje nieruchomości', s:'dzisiaj', v:0},
+    {id:'umowy', ic:'✍️', n:'Umowy podpisane',      s:'pośrednictwa', v:0},
+    {id:'rez',   ic:'🔖', n:'Rezerwacje',           s:'dzisiaj', v:0},
+    {id:'kred',  ic:'🏦', n:'Leady do doradcy kredytowego', s:'przekazane', v:0}
+  ];
+  var FIELDS2 = [
+    {id:'oferty', ic:'📂', n:'Aktywne oferty w pracy', s:'wczoraj: 14', v:14}
+  ];
+  var GOAL_TEL = 30;
+
+  function row(f){
+    return '<div class="fld">'+
+      '<span class="fi">'+f.ic+'</span>'+
+      '<span class="fl"><span class="n">'+f.n+'</span><span class="s" style="display:block">'+f.s+'</span></span>'+
+      '<span class="stepper">'+
+        '<button aria-label="mniej" onclick="chg(\''+f.id+'\',-1)">−</button>'+
+        '<span class="val" id="v-'+f.id+'">'+f.v+'</span>'+
+        '<button class="plus" aria-label="więcej" onclick="chg(\''+f.id+'\',1)">+</button>'+
+      '</span></div>';
+  }
+  document.getElementById('fields').innerHTML  = FIELDS.map(row).join('');
+  document.getElementById('fields2').innerHTML = FIELDS2.map(row).join('');
+
+  var VAL = {};
+  FIELDS.concat(FIELDS2).forEach(function(f){ VAL[f.id] = f.v; });
+
+  function chg(id, d){
+    VAL[id] = Math.max(0, VAL[id] + d);
+    var el = document.getElementById('v-'+id);
+    el.textContent = VAL[id];
+    el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+    if(id === 'tel') goalbar();
+  }
+
+  function goalbar(){
+    var v = VAL.tel, pct = Math.min(100, Math.round(v/GOAL_TEL*100));
+    var fill = document.getElementById('goal-fill');
+    fill.style.width = pct + '%';
+    fill.className = v >= GOAL_TEL ? 'done' : '';
+    document.getElementById('goal-txt').textContent =
+      v >= GOAL_TEL ? v + ' / ' + GOAL_TEL + ' ✓ cel osiągnięty!' : v + ' / ' + GOAL_TEL;
+  }
+
+  function save(){ document.getElementById('done').classList.add('show'); }
+  function reset(){ document.getElementById('done').classList.remove('show'); }
+
+  // ---------- Dzisiejsza data po polsku ----------
+  var d = new Date();
+  var dni = ['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
+  var mies = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
+  document.getElementById('today').textContent =
+    'Raport dzienny · ' + dni[d.getDay()] + ', ' + d.getDate() + ' ' + mies[d.getMonth()];
+
+  goalbar();
+</script>
+
+</body>
+</html>

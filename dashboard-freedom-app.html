@@ -39,6 +39,9 @@
     border-bottom:1px solid var(--szary);position:sticky;top:0;z-index:20;
   }
   .head-row{display:flex;align-items:center;justify-content:space-between}
+  .back-home{flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--szary);background:var(--tlo);color:var(--szary2);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:17px;line-height:1;margin-right:11px;transition:.15s}
+  .back-home:active{background:var(--magenta-soft);border-color:var(--magenta);color:var(--magenta)}
+  .head-row .logo{margin-right:auto}
   .logo{font-size:20px;font-weight:700;color:var(--magenta);letter-spacing:-.02em}
   .logo small{font-size:9px;font-weight:600;letter-spacing:.18em;color:var(--szary2);text-transform:uppercase;display:block;margin-top:-3px}
   .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--magenta),var(--purpur));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
@@ -155,6 +158,7 @@
 <div class="app">
   <header class="app-head">
     <div class="head-row">
+      <a class="back-home" href="index.html" title="Wróć do wyboru makiet" aria-label="Wróć do wyboru makiet">←</a>
       <div class="logo">freedom<small>Nieruchomości</small></div>
       <div class="av">MJ</div>
     </div>

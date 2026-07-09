@@ -48,6 +48,8 @@
     height:64px;position:sticky;top:0;z-index:50;
   }
   .brand{display:flex;align-items:baseline;gap:9px}
+  .back-home{align-self:center;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--szary);background:var(--tlo);color:var(--szary2);text-decoration:none;font-size:16px;line-height:1;margin-right:6px;transition:.15s}
+  .back-home:hover{color:var(--magenta);border-color:var(--magenta);background:var(--magenta-soft)}
   .brand .logo{font-size:24px;font-weight:700;color:var(--magenta);letter-spacing:-.02em}
   .brand .sub{font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--szary2);text-transform:uppercase}
 
@@ -200,6 +202,7 @@
 
 <header class="top">
   <div class="brand">
+    <a class="back-home" href="index.html" title="Wróć do wyboru makiet" aria-label="Wróć do wyboru makiet">←</a>
     <span class="logo">freedom</span>
     <span class="sub">Nieruchomości</span>
   </div>

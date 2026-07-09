@@ -35,7 +35,7 @@
 
   /* ---------- Header ---------- */
   .app-head{
-    background:var(--bialy);padding:calc(14px + env(safe-area-inset-top)) 18px 14px;
+    background:var(--bialy);padding:calc(36px + env(safe-area-inset-top)) 18px 14px;
     border-bottom:1px solid var(--szary);position:sticky;top:0;z-index:20;
   }
   .head-row{display:flex;align-items:center;justify-content:space-between}
@@ -204,7 +204,7 @@
         <div class="kpi"><div class="label">Prowizje w toku</div><div class="val">312<small> tys.</small></div><div class="delta flat">42 transakcje</div></div>
         <div class="kpi"><div class="label">Zafakturowane (mc)</div><div class="val">148<small> tys.</small></div><div class="delta up">▲ 11%</div></div>
         <div class="kpi"><div class="label">Pipeline (wartość)</div><div class="val">8,4<small> mln</small></div><div class="delta up">▲ 0,9 mln</div></div>
-        <div class="kpi"><div class="label">Prowizje zagrożone</div><div class="val" style="color:var(--czerwony)">18,2<small> tys.</small></div><div class="delta down">▼ po terminie</div></div>
+        <div class="kpi"><div class="label">Prowizje zagrożone</div><div class="val" style="color:var(--czerwony)">18,2<small> tys.</small></div><div class="delta down">▼ faktura niewystawiona</div></div>
       </div>
 
       <div class="alert amber">
@@ -246,10 +246,10 @@
 <script>
   // ---------- Dane przykładowe ----------
   var KPI = {
-    all:       {leady:47,tel:213,spotk:19,konw:'18,4'},
+    all:       {leady:47,tel:180,spotk:19,konw:'18,4'},
     'Mokotów': {leady:21,tel:91, spotk:10,konw:'21,0'},
     'Piaseczno':{leady:14,tel:52,spotk:5, konw:'18,2'},
-    'Ząbki':   {leady:12,tel:70, spotk:4, konw:'16,1'}
+    'Ząbki':   {leady:12,tel:37, spotk:4, konw:'16,1'}
   };
   var AGENCI = [
     {ini:'AK',nm:'Anna Kowalczyk',biuro:'Mokotów',tel:38,spotk:5,pct:100,on:true,akt:'2 min temu'},
@@ -262,7 +262,7 @@
     {ini:'RS',nm:'Rafał Szymański',biuro:'Ząbki',tel:6,spotk:1,pct:33,on:false,akt:'3 h temu'}
   ];
   var TRX = [
-    {addr:'ul. Puławska 142',biuro:'Mokotów',agent:'P. Nowak',prov:'18 200 zł',stage:'Akt notarialny',fak:'late',fakt:'po terminie'},
+    {addr:'ul. Puławska 142',biuro:'Mokotów',agent:'P. Nowak',prov:'18 200 zł',stage:'Akt notarialny',fak:'late',fakt:'niewystawiona'},
     {addr:'ul. Marszałkowska 7',biuro:'Mokotów',agent:'A. Kamińska',prov:'22 800 zł',stage:'Prowizja OK',fak:'ok',fakt:'opłacona'},
     {addr:'ul. Górczewska 90',biuro:'Piaseczno',agent:'T. Lewandowski',prov:'24 000 zł',stage:'Umowa przedwst.',fak:'wait',fakt:'oczekuje'},
     {addr:'ul. Bukowińska 5',biuro:'Mokotów',agent:'P. Nowak',prov:'21 000 zł',stage:'Prezentacja',fak:'wait',fakt:'oczekuje'},
@@ -314,11 +314,12 @@
   function renderAgents(){
     var list = AGENCI.filter(function(a){return currentBiuro==='all' || a.biuro===currentBiuro;});
     document.getElementById('agents-full').innerHTML = list.map(agentCard).join('');
-    document.getElementById('agents-mini').innerHTML = list.slice(0,4).map(agentCard).join('');
+    document.getElementById('agents-mini').innerHTML = list.filter(function(a){return a.on;}).slice(0,4).map(agentCard).join('');
     document.getElementById('agenci-title').textContent =
-      (currentBiuro==='all' ? 'Wszyscy agenci' : 'Agenci · '+currentBiuro) + ' · ' + list.length + ' ' + (list.length===1?'osoba':'osób');
+      (currentBiuro==='all' ? 'Wszyscy agenci' : 'Agenci · '+currentBiuro) + ' · ' + list.length + ' ' + osoby(list.length);
   }
   function toggleAgent(el){ el.classList.toggle('open'); }
+  function osoby(n){ return n===1 ? 'osoba' : (n>=2 && n<=4 ? 'osoby' : 'osób'); }
 
   // ---------- Render transakcji ----------
   function renderTrx(){
